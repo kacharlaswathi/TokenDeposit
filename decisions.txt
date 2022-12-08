@@ -1,0 +1,4 @@
+1. Used separate contract for slabs to simulate the transfer of erc20 tokens.
+2. Since a separate contract is used, configuration for max capacity and available capacity can be maintained inside slab contract.
+2. Deployer for slab contract will be DepositToken contract, so only DepositToken contract can update the filled capacity.
+3. Since slabs are predefined, created slabs in constructor.
