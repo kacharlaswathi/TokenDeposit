@@ -61,8 +61,6 @@ function createTestnetConfig(network: keyof typeof chainIds): NetworkUserConfig 
     url = "https://api.avax.network/ext/bc/C/rpc";
   } else if (network == "arbitrum") {
     url = "https://rinkeby.arbitrum.io/rpc";
-  } else if (network == "polygonmainnet") {
-    url = "https://polygon-mainnet.infura.io/v3/9020d984dfd94edaa8f7605a074ea000";
   } else {
     url = "https://polygon-mainnet.infura.io/v3/" + infuraApiKey;
   }
@@ -99,12 +97,6 @@ const config: HardhatUserConfig = {
     avax: createTestnetConfig("avax"),
     arbitrum: createTestnetConfig("arbitrum"),
     polygonmainnet: createTestnetConfig("polygonmainnet"),
-  },
-  etherscan: {
-    apiKey: {
-      polygon: "QH8HG9X72DTXG18RBQTTV1AKPV4IH2Y34G",
-      bsc: "M11QVPH2IPTUDQZTAWFAVVAFF3E7Y78HTB",
-    },
   },
   paths: {
     artifacts: "./artifacts",
