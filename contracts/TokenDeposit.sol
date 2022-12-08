@@ -22,19 +22,22 @@ contract TokenDeposit {
         uint256 temp = _amount;
         for(uint256 i = slabs.length - 1; i >=0 ;i--){
             uint256 available = Slab(slabs[i]).getAvailableCapacity();
+            if(available == 0) continue;
+            // fill some tokens in available slabs
+            // fill the rest in other slabs
             if(temp >= available){
                 temp = temp - available;
                 Slab(slabs[i]).updateFilled(temp - available);
                 IERC20(_token).transferFrom(msg.sender, slabs[i], temp - available);
             }
             else { 
+                temp = 0;
                 IERC20(_token).transferFrom(msg.sender, slabs[i], temp);
                 break;
             }
+            
         }
-        require(temp == 0, "no slabs available this amount");
-
-
+        require(temp == 0, "no vacant slabs for this amount");
     }
 }
 
