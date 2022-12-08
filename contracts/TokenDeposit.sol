@@ -18,7 +18,22 @@ contract TokenDeposit {
     }
 
     function deposit(address _token, uint256 _amount) external {
-        IERC20(_token).transferFrom(msg.sender, slabs[slabs.length - 1], _amount);
+        require(_amount > 0, "amount is 0");
+        uint256 temp = _amount;
+        for(uint256 i = slabs.length - 1; i >=0 ;i--){
+            uint256 available = Slab(slabs[i]).getAvailableCapacity();
+            if(temp >= available){
+                temp = temp - available;
+                Slab(slabs[i]).updateFilled(temp - available);
+                IERC20(_token).transferFrom(msg.sender, slabs[i], temp - available);
+            }
+            else { 
+                IERC20(_token).transferFrom(msg.sender, slabs[i], temp);
+                break;
+            }
+        }
+        require(temp == 0, "no slabs available this amount");
+
 
     }
 }
