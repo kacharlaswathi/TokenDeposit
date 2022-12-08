@@ -9,14 +9,20 @@ contract TokenDeposit {
     address[5] public slabs;
     mapping(address => uint256[]) public depositedSlabs;
     constructor() {
-        slabs[0] = address(new Slab(100));
-        slabs[1] = address(new Slab(200));
-        slabs[2] = address(new Slab(300));
-        slabs[3] = address(new Slab(400));
-        slabs[4] = address(new Slab(500));
+        slabs[0] = address(new Slab(100 * 1e18));
+        slabs[1] = address(new Slab(200 * 1e18));
+        slabs[2] = address(new Slab(300 * 1e18));
+        slabs[3] = address(new Slab(400 * 1e18));
+        slabs[4] = address(new Slab(500 * 1e18));
     }
 
-    function deposit(address _token, uint256 _amount) external {
+    modifier isDeposited(address _depositor) {
+        uint256[] memory userSlabs = depositedSlabs[_depositor];
+        require(userSlabs.length == 0, "already deposited");
+        _;
+    }
+
+    function deposit(address _token, uint256 _amount) external isDeposited(msg.sender){
         require(_amount > 0, "amount is 0");
         uint256 temp = _amount;
         for(uint256 i = slabs.length - 1; i >=0 ;i--){
@@ -24,17 +30,21 @@ contract TokenDeposit {
             if(available == 0) continue;
             // fill some tokens in available slabs
             // fill the rest in other slabs
-            if(temp >= available){
+            if(temp > available){
+                //uint256 amountForSlab = available;
                 temp = temp - available;
-                depositedSlabs[msg.sender].push(i);
-                IERC20(_token).transferFrom(msg.sender, slabs[i], temp - available);
+                Slab(slabs[i]).updateFilled(available);
+                IERC20(_token).transferFrom(msg.sender, slabs[i], available);
             }
             else { 
-                temp = 0;
+                Slab(slabs[i]).updateFilled(temp);
                 IERC20(_token).transferFrom(msg.sender, slabs[i], temp);
-                break;
+                temp = 0;
             }
             depositedSlabs[msg.sender].push(i);
+
+            if(temp == 0 || i == 0)
+                break;
         }
         require(temp == 0, "no vacant slabs for this amount");
     }
