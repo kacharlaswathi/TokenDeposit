@@ -103,7 +103,7 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       polygon: "QH8HG9X72DTXG18RBQTTV1AKPV4IH2Y34G",
-      bsc: "M11QVPH2IPTUDQZTAWFAVVAFF3E7Y78HTB"
+      bsc: "M11QVPH2IPTUDQZTAWFAVVAFF3E7Y78HTB",
     },
   },
   paths: {

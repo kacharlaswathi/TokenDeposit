@@ -31,7 +31,6 @@ contract TokenDeposit {
             // fill some tokens in available slabs
             // fill the rest in other slabs
             if(temp > available){
-                //uint256 amountForSlab = available;
                 temp = temp - available;
                 Slab(slabs[i]).updateFilled(available);
                 IERC20(_token).transferFrom(msg.sender, slabs[i], available);
