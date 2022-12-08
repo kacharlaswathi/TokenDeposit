@@ -6,6 +6,8 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TokenDeposit {
 
+    event Deposit(address indexed _user, uint256 _amount);
+
     address[5] public slabs;
     mapping(address => uint256[]) public depositedSlabs;
     constructor() {
@@ -46,6 +48,7 @@ contract TokenDeposit {
                 break;
         }
         require(temp == 0, "no vacant slabs for this amount");
+        emit Deposit(msg.sender, _amount);
     }
     function getDepositedSlab(address _depositor) external view returns(uint256[] memory){
         return depositedSlabs[_depositor];

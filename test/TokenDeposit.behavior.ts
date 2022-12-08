@@ -10,7 +10,7 @@ export function shouldBehaveLikeTokenDeposit(): void {
     const allowance = await token.allowance(await this.signers.admin.getAddress(), tokenDeposit.address);
 
     expect(allowance).to.eq(depositAmount);
-    await tokenDeposit.deposit(token.address, depositAmount);
+    await expect(tokenDeposit.deposit(token.address, depositAmount)).to.emit(tokenDeposit, "Deposit");
     const slabs = await tokenDeposit.getDepositedSlab(await this.signers.admin.getAddress());
     expect(slabs[0]).to.eq(4);
   });
