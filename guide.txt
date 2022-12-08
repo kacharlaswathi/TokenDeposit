@@ -1,0 +1,8 @@
+1. Slab contract has configuration about the max capacity and the available capacity to deposit
+2. TokenDeposit contract deploys each slab contract and stores address in an array.
+3. When a token deposited, first it is deployed to the highes level slab in the array.
+   if the array is filled during the deposit, remaining tokens will be deposited in the next slab.
+4. Each time a deposit is same made, available capacity (capacity - filled) is changed.
+6. If the amount to be deposited is greater then available capacity in all slabs, then transaction is reverted.
+7. getDepositedSlab gives the deposited slabs for the user. User is restricted to deposit only once.
+8. run yarn test to run all the testcases
