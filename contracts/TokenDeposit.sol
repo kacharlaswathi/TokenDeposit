@@ -7,8 +7,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract TokenDeposit {
 
     address[5] public slabs;
-    mapping(uint256 => uint256) public slabsOccupied;
-
+    mapping(address => uint256[]) public depositedSlabs;
     constructor() {
         slabs[0] = address(new Slab(100));
         slabs[1] = address(new Slab(200));
@@ -27,7 +26,7 @@ contract TokenDeposit {
             // fill the rest in other slabs
             if(temp >= available){
                 temp = temp - available;
-                Slab(slabs[i]).updateFilled(temp - available);
+                depositedSlabs[msg.sender].push(i);
                 IERC20(_token).transferFrom(msg.sender, slabs[i], temp - available);
             }
             else { 
@@ -35,9 +34,13 @@ contract TokenDeposit {
                 IERC20(_token).transferFrom(msg.sender, slabs[i], temp);
                 break;
             }
-            
+            depositedSlabs[msg.sender].push(i);
         }
         require(temp == 0, "no vacant slabs for this amount");
     }
+    function getDepositedSlab(address _depositor) external view returns(uint256[] memory){
+        return depositedSlabs[_depositor];
+    }
+
 }
 
